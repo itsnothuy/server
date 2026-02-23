@@ -1,0 +1,30 @@
+// =============================================================================
+// Patch for python_backend/src/python_be.h
+// Issue: triton-inference-server/server#8604
+// Purpose: Add RestartStubProcess() method and restart infrastructure
+//
+// Apply context: Add these members to the ModelInstanceState class.
+// The patch shows what to ADD to the existing class definition.
+// =============================================================================
+//
+// In the PUBLIC section of ModelInstanceState, after LaunchStubProcess():
+//
+//   // Restart an unhealthy stub process with rate limiting and
+//   // concurrency protection. Safe to call from multiple threads.
+//   TRITONSERVER_Error* RestartStubProcess();
+//
+//   // Check whether a restart is allowed (rate limiting).
+//   bool CanRestart();
+//
+// In the PRIVATE section of ModelInstanceState, add:
+//
+//   // Concurrency protection for restart
+//   std::mutex restart_mutex_;
+//   std::atomic<bool> restart_in_progress_{false};
+//
+//   // Restart rate limiting
+//   std::atomic<int> restart_count_{0};
+//   std::chrono::steady_clock::time_point restart_window_start_{
+//       std::chrono::steady_clock::now()};
+//   static constexpr int kMaxRestartsPerWindow = 5;
+//   static constexpr int kRestartWindowSeconds = 60;
