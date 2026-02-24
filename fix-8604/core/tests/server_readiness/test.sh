@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2026, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# Copyright 2025, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -127,7 +127,6 @@ if [ -z "$STUB_PID" ]; then
 else
     echo "Killing stub PID: $STUB_PID"
     kill -9 $STUB_PID
-    sleep 2  # Wait for the process to be reaped
 
     set +e
     python3 test_server_readiness.py TestServerReadiness.test_server_not_ready_after_stub_death >>$TEST_LOG 2>&1
@@ -170,7 +169,6 @@ if [ -z "$STUB_PID" ]; then
     RET=1
 else
     kill -9 $STUB_PID
-    sleep 2
 
     set +e
     python3 test_server_readiness.py TestServerReadiness.test_server_ready_with_strict_false >>$TEST_LOG 2>&1
