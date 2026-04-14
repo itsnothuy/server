@@ -417,6 +417,10 @@ class HTTPAPIServer : public HTTPServer {
     static evhtp_res ControlRequestFiniHook(evhtp_request* req, void* arg)
     {
       auto* ctrl_req = reinterpret_cast<ControlRequestClass*>(arg);
+      if (ctrl_req->req_ != req) {
+        LOG_ERROR << "[INTERNAL] mismatched request in control fini hook";
+        return EVHTP_RES_ERROR;
+      }
       ctrl_req->req_ = nullptr;
       return EVHTP_RES_OK;
     }
