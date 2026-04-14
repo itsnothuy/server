@@ -42,10 +42,10 @@ thread explosion.
 - [ ] Populated [github labels](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels) field
   → suggest label: `bug`
 - [ ] Added [test plan](#test-plan) and verified test passes.
-- [ ] Verified that the PR passes existing CI.
-- [ ] I ran pre-commit locally (`pre-commit install, pre-commit run --all`)
+- [x] Verified that the PR passes existing CI.
+- [x] I ran pre-commit locally (`pre-commit run --files src/http_server.h src/http_server.cc src/main.cc` — all hooks passed)
 - [x] Verified copyright is correct on all changed files.
-  → No new files; existing copyright headers on `http_server.h`, `http_server.cc`, `main.cc` unchanged.
+  → `add-license` hook updated `http_server.h` copyright year 2025→2026; all 3 files now carry `2026` end year.
 - [ ] Added succinct git squash message before merging
   → draft: `fix: async model load/unload to prevent evhtp thread starvation (#8635)`
 - [x] All template sections are filled out.
