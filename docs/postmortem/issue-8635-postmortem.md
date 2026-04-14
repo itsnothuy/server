@@ -267,16 +267,16 @@ Thread-per-request is the right trade-off: minimal code, bounded by the atomic c
 
 ## Part 6.3 — Is This PR Worth Submitting?
 
-**Verdict: NOT YET.**
+**Verdict: NOT YET — but significantly closer. Three of six blockers resolved on macOS M4.**
 
 **Blocking items (ordered by priority):**
 
-1. **Compile the code** on a Linux machine with the Triton CMake build system. This is the highest-priority blocker. Without compilation, the PR is not credible.
-2. **Run clang-format** on `src/http_server.h` and `src/http_server.cc`.
-3. **Sign the NVIDIA CLA** for the submitting GitHub account.
-4. **Check for duplicate PRs** on `triton-inference-server/server` referencing #8635.
-5. **Run `qa/L0_http/`** to verify no regression in existing HTTP tests.
-6. **Add `Fixes #8635`** to the commit message.
+1. **Compile the code** on a Linux machine with the Triton CMake build system. This is the highest-priority blocker. Without compilation, the PR is not credible. ⚠️ **CANNOT DO on macOS M4** — requires Linux + CUDA + GPU. evhtp and re2 do not build on ARM macOS without significant patching.
+2. ~~**Run clang-format** on `src/http_server.h` and `src/http_server.cc`.~~ ✅ **DONE** — `clang-format 16.0.0` (Xcode CLT) applied using the repo's `.clang-format` config (Google style, 80-col, 2-space indent). Formatting verified and included in commit `0d97d700`.
+3. **Sign the NVIDIA CLA** for the submitting GitHub account. ⚠️ **ACTION REQUIRED** — visit https://github.com/NVIDIA/cla to sign for the `itsnothuy` account.
+4. ~~**Check for duplicate PRs**~~ ✅ **DONE** — Queried `https://api.github.com/repos/triton-inference-server/server/pulls?state=open` (April 2026). Zero open PRs reference #8635.
+5. **Run `qa/L0_http/`** to verify no regression in existing HTTP tests. ⚠️ **CANNOT DO on macOS M4** — requires a compiled Triton server binary (Linux/CUDA).
+6. ~~**Add `Fixes #8635`** to the commit message.~~ ✅ **DONE** — committed as `0d97d700` on branch `fix-8635-evhtp-thread-imbalance`, pushed to `https://github.com/itsnothuy/server`. Full multi-paragraph commit message included.
 
 **Non-blocking but recommended:**
 
