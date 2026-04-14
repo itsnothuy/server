@@ -3909,6 +3909,26 @@ HTTPAPIServer::InferRequestClass::ReplyCallback(
   delete infer_request;
 }
 
+void
+HTTPAPIServer::ControlRequestClass::ReplyCallback(
+    evthr_t* thr, void* arg, void* shared)
+{
+  (void)thr;
+  (void)shared;
+  auto* ctrl_req = reinterpret_cast<HTTPAPIServer::ControlRequestClass*>(arg);
+  evhtp_request_t* req = ctrl_req->req_;
+  if (req != nullptr) {
+    if (ctrl_req->err_ != nullptr) {
+      EVBufferAddErrorJson(req->buffer_out, ctrl_req->err_);
+      evhtp_send_reply(req, HttpCodeFromError(ctrl_req->err_));
+    } else {
+      evhtp_send_reply(req, EVHTP_RES_OK);
+    }
+    evhtp_request_resume(req);
+  }
+  delete ctrl_req;
+}
+
 evhtp_res
 HTTPAPIServer::InferRequestClass::RequestFiniHook(
     evhtp_request* request, void* arg)
